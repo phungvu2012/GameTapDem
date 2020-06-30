@@ -1,0 +1,31 @@
+#container {
+	position: relative;
+	font-family: "Comic Sans MS", san-serif;
+}
+
+#screen-game {
+	background-image: url("views/background-color/color (14).png");
+	margin: 0 auto;
+	position: relative;
+}
+
+#video {
+	position: absolute;
+	bottom: 0;
+}
+
+#menu {
+	position: absolute;
+}
+
+#kodi {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}
+
+#flatform {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}
