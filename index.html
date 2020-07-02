@@ -5,7 +5,9 @@
 	<title>Game Launcher</title>
 	<link rel="stylesheet" type="text/css" href="resetCss.css">
 	<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="shortcut icon" type="image/png" href="favicon.png">
 	<script type="text/javascript" src="data.js"></script>
+	<script type="text/javascript" src="readFile.js"></script>
 </head>
 <body onload="startGame()">
 	<div id="container">
@@ -13,37 +15,52 @@
 
 
 	<script type="text/javascript">
+
+		// Chạy thử
+		// readTextFile("test.json", function (text) {
+		//     var data = JSON.parse(text);
+		//     alert(data.name);
+		// });
+
 		var myGameArea = {
   			screenGame: document.createElement("div"),
-  			menu: document.createElement('div'),
+  			stage: document.createElement("div"),
+  			home: document.createElement('div'),
     		video: document.createElement('div'),
     		flatform: document.createElement('div'),
     		kodi: document.createElement('div'),
   			start: function() {
-
+  			// Màn hình chơi
     		this.screenGame.setAttribute('id', 'screen-game');
     		setSizeElement(this.screenGame, data.screenGame.width, data.screenGame.height);
     		document.getElementById('container').appendChild(this.screenGame);
-
+    		// Màn chơi
+       		this.stage.setAttribute('id', 	'stage');
+    		setSizeElement(this.stage, data.screenGame.width, data.screenGame.height, 0.8);
+    		this.screenGame.appendChild(this.stage);
+    		// Góc của con gấu
     		this.flatform.setAttribute('id', 'flatform');
-    		setSizeElement(this.flatform, data.flatform.width, data.flatform.height, data.zoom * 1.5, data.flatform.url)
+    		setSizeElement(this.flatform, data.flatform.width, data.flatform.height, data.zoom * 1.5, data.flatform.url);
     		this.screenGame.appendChild(this.flatform);  
-
-    		this.menu.setAttribute('id', 'menu');
-    		setSizeElement(this.menu, data.menu.width, data.menu.height, data.zoom, data.menu.url);
-    		this.screenGame.appendChild(this.menu);
-
+    		// Nút home trở về
+    		this.home.setAttribute('id', 'home');
+    		setSizeElement(this.home, data.home.width, data.home.height, data.zoom, data.home.url);
+    		this.screenGame.appendChild(this.home);
+    		// Nút video
     		this.video.setAttribute('id', 'video');
     		setSizeElement(this.video, data.video.width, data.video.height, data.zoom, data.video.url)
     		this.screenGame.appendChild(this.video);  
-
+    		// Gấu kodiImage
 			this.kodi.setAttribute('id', 'kodi');
     		setSizeElement(this.kodi, data.kodiImage.width, data.kodiImage.height, data.zoom, data.kodiImage.url);
     		this.kodi.style.transform = "translate(" + data.kodiImage.width * 0.06 +"px)"; 
     		this.screenGame.appendChild(this.kodi);  
   			}
 		}
-
+		function game(stage) {
+			
+		}
+		// Thiết lập kích thước phần tử và background của vật thể
 		function setSizeElement(element, width, height, zoom = 1, url_bg) {
 			if(url_bg === undefined) 
 				element.setAttribute("style", 'width: '+ width * zoom + 'px; height: ' + height * zoom + 'px;');
@@ -96,12 +113,12 @@
 				height: 180
 			},
 			video: {
-				url: "views/video/leaf_hintvideo_btn-ipad@2x.png",
+				url: "views/video/icon (1).png",
 				width: 176,
 				height: 176
 			},
-			menu: {
-				url: "views/video/leaf_hintvideo_btn-ipad@2x.png",
+			home: {
+				url: "views/home/home.png",
 				width: 176,
 				height: 176
 			},

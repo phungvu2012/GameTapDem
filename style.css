@@ -1,3 +1,7 @@
+body {
+	background: url("views/unnamed (1).jpg");
+	background-size: cover;
+}
 #container {
 	position: relative;
 	font-family: "Comic Sans MS", san-serif;
@@ -9,12 +13,20 @@
 	position: relative;
 }
 
+#stage {
+	background: white;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
 #video {
 	position: absolute;
 	bottom: 0;
 }
 
-#menu {
+#home {
 	position: absolute;
 }
 
