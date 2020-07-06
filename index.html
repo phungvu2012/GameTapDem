@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta charset="utf-8" />
 	<title>Game Launcher</title>
@@ -9,94 +10,141 @@
 	<script type="text/javascript" src="data.js"></script>
 	<script type="text/javascript" src="readFile.js"></script>
 </head>
-<body onload="startGame()">
+
+<body onload="start()">
 	<div id="container">
+		<div class="container-bg-cell"> </div>
+		<div class="container-bg-color"> </div>
+		<div class="container-bg-stuff"> </div>
+		<img class="container-bg-color" src="views/background/grad.jpg" />
+		<div class="game-box"></div>
 	</div>
 
 
 	<script type="text/javascript">
-
-		// Chạy thử
-		// readTextFile("test.json", function (text) {
-		//     var data = JSON.parse(text);
-		//     alert(data.name);
-		// });
-
 		var myGameArea = {
-  			screenGame: document.createElement("div"),
-  			stage: document.createElement("div"),
-  			home: document.createElement('div'),
-    		video: document.createElement('div'),
-    		flatform: document.createElement('div'),
-    		kodi: document.createElement('div'),
-  			start: function() {
-  			// Màn hình chơi
-    		this.screenGame.setAttribute('id', 'screen-game');
-    		setSizeElement(this.screenGame, data.screenGame.width, data.screenGame.height);
-    		document.getElementById('container').appendChild(this.screenGame);
-    		// Màn chơi
-       		this.stage.setAttribute('id', 	'stage');
-    		setSizeElement(this.stage, data.screenGame.width, data.screenGame.height, 0.8);
-    		this.screenGame.appendChild(this.stage);
-    		// Góc của con gấu
-    		this.flatform.setAttribute('id', 'flatform');
-    		setSizeElement(this.flatform, data.flatform.width, data.flatform.height, data.zoom * 1.5, data.flatform.url);
-    		this.screenGame.appendChild(this.flatform);  
-    		// Nút home trở về
-    		this.home.setAttribute('id', 'home');
-    		setSizeElement(this.home, data.home.width, data.home.height, data.zoom, data.home.url);
-    		this.screenGame.appendChild(this.home);
-    		// Nút video
-    		this.video.setAttribute('id', 'video');
-    		setSizeElement(this.video, data.video.width, data.video.height, data.zoom, data.video.url)
-    		this.screenGame.appendChild(this.video);  
-    		// Gấu kodiImage
-			this.kodi.setAttribute('id', 'kodi');
-    		setSizeElement(this.kodi, data.kodiImage.width, data.kodiImage.height, data.zoom, data.kodiImage.url);
-    		this.kodi.style.transform = "translate(" + data.kodiImage.width * 0.06 +"px)"; 
-    		this.screenGame.appendChild(this.kodi);  
-  			}
-		}
-		function game(stage) {
-			
-		}
-		// Thiết lập kích thước phần tử và background của vật thể
-		function setSizeElement(element, width, height, zoom = 1, url_bg) {
-			if(url_bg === undefined) 
-				element.setAttribute("style", 'width: '+ width * zoom + 'px; height: ' + height * zoom + 'px;');
-			else {
-				element.setAttribute("style", 'width: '+ width * zoom + 'px; height: ' + height * zoom + 'px; background: url("' + url_bg +'"); background-size: ' + width * zoom + 'px ' + height * zoom + 'px;')
+			gameArea: document.createElement('div'),
+			stage: document.createElement('div'),
+			homeButton: document.createElement('div'),
+			videoButton: document.createElement('div'),
+			instructor: document.createElement('div'),
+			start: function() {
+				this.gameArea.classList.add('game-area');
+
+				this.gameArea.appendChild(this.stage);
+
+				this.homeButton.classList.add('home-button');
+				var homeImg = document.createElement("img");
+				homeImg.src = data.home.url;
+				this.homeButton.appendChild(homeImg);
+
+				this.videoButton.classList.add('video-button');
+				var videoImg = document.createElement("img");
+				videoImg.src = data.video.url;
+				this.videoButton.appendChild(videoImg);
+
+				this.instructor.classList.add('instructor');
+				this.instructor.classList.add("instructor");
+
+				var bear = document.createElement("div");
+				bear.classList.add("bear");
+				bear.classList.add("action-bear");
+				this.instructor.appendChild(bear);
+
+				var cornerImg = document.createElement("img");
+				cornerImg.classList.add("corner");
+				cornerImg.src = data.flatform.url;
+				this.instructor.appendChild(cornerImg);
+
+
+				// this.gameArea.classList.add('game-area');
+				var gameBox = document.getElementsByClassName("game-box")[0];
+				this.gameArea.appendChild(this.homeButton);
+				this.gameArea.appendChild(this.videoButton);
+				this.gameArea.appendChild(this.instructor);
+				gameBox.appendChild(this.gameArea);
 			}
 		}
 
-		function startGame(){
+		var stage1 = {
+				number: 20,
+				count: 0,
+				start: function (gameArea) {
+					gameArea.stage.classList.add('stage');
+					var stageImg = document.createElement("img");
+					stageImg.src = data.game1.box.url;
+					gameArea.stage.appendChild(stageImg);
+					setPaddingElement(gameArea.stage, data.game1.box.paddingTop * gameArea.stage.clientHeight, data.game1.box.paddingRight * gameArea.stage.clientWidth, data.game1.box.paddingBottom * gameArea.stage.clientHeight, data.game1.box.paddingLeft * gameArea.stage.clientWidth);
+					for(let i = 0; i < this.number; i++) {
+						var element = document.createElement('div');
+						element.classList.add('item');
+						element.classList.add('under_start');
+						element.addEventListener("click", this.countItem, false);
 
-			data.setScreenGame();
-			// Tạo màn chơi
-			myGameArea.start();
-			// document.getElementById('menu').innerHTML= ;
+						var img = document.createElement('img');
+						img.src = data.game1.button.firstUrl + (i+1) + data.game1.button.lastUrl;
+						element.appendChild(img);
+						gameArea.stage.appendChild(element);
+					}
+					this.audio = [];
+					for (let i = 0; i < this.number; i++) {
+						this.audio[i] = new Sound(data.sound.number.firstUrl + (i+1) + data.sound.number.lastUrl)
+					}
+				},
+				countItem: function(e) {
+					if(this.classList.toString().indexOf("under_start") > -1) {
+						++stage1.count;
+						console.log(stage1.count);
+						this.classList.remove('under_start');
+						stage1.audio[stage1.count-1].play();
+					}
+					else {
+						--stage1.count;
+						this.classList.add('under_start');
+					}
+				}
 		}
 
-</script>
+		function setPaddingElement(element, top, right, bottom, left) {
+			element.style.padding = top + "px " + right + "px " + bottom + "px " + left + "px";
+		}
 
+		function Sound(src) {
+			this.sound = document.createElement("audio");
+			this.sound.src = src;
+			this.sound.setAttribute("preload", "auto");
+			this.sound.setAttribute("controls", "none");
+			this.sound.style.display = "none";
+			document.body.appendChild(this.sound);
+			this.optionAudio = function(loop, volume){
+				this.sound.loop = loop;
+				this.sound.volume = volume;
+				console.log('hello')
+			}
+			this.play = function() {
+				this.sound.play()
+			}
+		}
+		function backgroundSound(volume) {
+			var mySound = new Sound(data.sound.background.firstUrl + 2 + data.sound.background.lastUrl);
+			mySound.optionAudio(true, volume);
+			mySound.sound.classList.add("sound");
+			document.body.addEventListener("click", function() {
+				mySound.play();
+			}, false)		
+		}
 
+		function start() {
+			// backgroundSound(0.4);
+			myGameArea.start();
+			stage1.start(myGameArea);
+		}
+	</script>
 
-
-
-
-
-
-
-
-
-
-
-<script>
+	<script>
 		var data = {
 			backgroundImage: {
 				url: "views/background-color/color (10).png",
-				width: 2048,
-				height: 1536
 			},
 			screen: {
 				width: window.innerWidth,
@@ -104,32 +152,54 @@
 			},
 			kodiImage: {
 				url: "views/kodi/kodi (1).png",
-				width: 1560,
-				height: 408
 			},
 			flatform: {
 				url: "views/kodi/platform.png",
-				width: 208,
-				height: 180
 			},
 			video: {
 				url: "views/video/icon (1).png",
-				width: 176,
-				height: 176
 			},
 			home: {
 				url: "views/home/home.png",
-				width: 176,
-				height: 176
+			},
+			game1: {
+				box: {
+					url: "views/box/box (2).png",
+					width: 2048,
+					height: 1536,
+					paddingTop: 0.091,
+					paddingLeft: 0.0635,
+					paddingBottom: 0.174,
+					paddingRight: 0.07
+				},
+				button: {
+					firstUrl: "views/reyabug/icon (",
+					lastUrl: ").png",
+				}
 			},
 			screenGame: {},
 			ratio: 1,
 			zoom: 1,
+			stage: {
+				zoom: 0.8
+			},
+			sound: {
+				background: {
+					firstUrl: "views/sound/music (",
+					lastUrl: ").mp3"
+				},
+				number: {
+					firstUrl: "views/sound number/",
+					lastUrl: ".mp3"
+				}
+			},
 			setScreenGame: function() {
 				this.ratio = this.backgroundImage.width / this.backgroundImage.height;
 				this.zoom = this.screen.height / this.backgroundImage.height
 				this.screenGame.height = this.screen.height;
 				this.screenGame.width = this.screenGame.height * this.ratio;
+				this.stage.height = this.screenGame.height * this.stage.zoom;
+				this.stage.width = this.screenGame.width * this.stage.zoom;
 			}
 		}
 	</script>
