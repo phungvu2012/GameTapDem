@@ -42,6 +42,9 @@
 				zoom: 0.8
 			},
 			sound: {
+				welcome: {
+					url: "views/kodi/5 kodi - welcome to my room excited.mp3"
+				},
 				background: {
 					firstUrl: "views/sound/music (",
 					lastUrl: ").mp3"
@@ -58,7 +61,17 @@
 				},
 				bubblePop: {
 					url: "views/sound/back_button.mp3"
+				},
+				happy: {
+					url: ""
+				},
+				wrong: {
+					url: ""
+				},
+				thank: {
+					url: "views/kodi/usgk$kodivoice$thanksforplayingwithme.mp3"
 				}
+
 			},
 			setScreenGame: function() {
 				this.ratio = this.backgroundImage.width / this.backgroundImage.height;

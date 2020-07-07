@@ -54,11 +54,15 @@ var audio = {
 	number: [],
 	background: "",
 	bubblePop: "",
+	welcome: "",
+	thank: "",
 	load: function(number) {
 		this.click = new Sound(data.sound.click.url);
 		this.clickSound =  new Sound(data.sound.clickGame.url);
 		this.loadAudioNumber(stage1.number);
 		this.bubblePop = new Sound(data.sound.bubblePop.url);
+		this.welcome = new Sound(data.sound.welcome.url);
+		this.thank = new Sound(data.sound.thank.url);
 	},
 	loadAudioNumber: function(number) {
 		for (let i = 0; i < number; i++) {
@@ -76,14 +80,14 @@ var audio = {
 		for (let i = 0; i < audio.length; i++) {
 			audio[i].pause();
 			audio[i].currentTime = 0;
-			console.log(audio[i]);
+			// console.log(audio[i]);
 		}
 	}
 }
 
 var stage1 = {
 		number: 20,
-		gameNumber: [18, 16, 8],
+		gameNumber: [1, 2, 3],
 		count: 0,
 		item: [],
 		complete: false,
@@ -141,7 +145,7 @@ var stage1 = {
 						clearInterval(interval.introGame1);
 						setTimeout(stage1.start, 1000);
 					}
-				}, 1000);
+				}, 200); //1000
 			interval.loopGame1 = setInterval(this.update, 200);
 		},
 		start: function() {
@@ -167,15 +171,116 @@ var stage1 = {
 			}
 			else if(stage1.count === stage1.gameNumber[stage1.lesson - 1] ) {
 				++stage1.lesson;
-				setTimeout(stage1.start, 500);
+				setTimeout(stage1.start, 500);	
 			}
 			if(stage1.complete) {
 				console.log("win")
-				clearInterval(interval.loopGame1);
+				clearInterval(interval.loopGame1)
 				resetStage();
+				stage2.load();
 			}
 		}
 	}
+
+var stage2 = {
+	number: 20,
+	gameNumber: [
+		{
+			number: 16,
+			element1: 16,
+			element2: 12
+		}, 
+		{
+			number: 12,
+			element1: 14,
+			element2: 12
+		}, 
+		{
+			number: 8,
+			element1: 8,
+			element2: 18
+		}],
+	lesson: 1,
+	button: {
+		element1: document.createElement("button"),
+		element2: document.createElement("button")
+	},
+	load: function() {
+		this.lesson = 1;
+		myGameArea.stage.appendChild(this.button.element1);
+		myGameArea.stage.appendChild(this.button.element2);
+		myGameArea.stage.classList.add('stage2');
+		myGameArea.stage.classList.remove('stage');
+		this.createItem();
+		this.button.element1.addEventListener("click", this.checkResult);
+		this.button.element2.addEventListener("click", this.checkResult);
+		this.button.element1.classList.add("element1");
+		this.button.element2.classList.add("element2");
+
+	},
+	createItem: function() {
+			for(let i = 0; i < this.number; i++) {
+				var element = document.createElement('div');
+				element.classList.add('item');
+				element.classList.add('no_play');
+
+				var img = document.createElement('img');
+				img.src = data.game1.button.firstUrl + getRndInteger(data.game1.button.min, data.game1.button.max) + data.game1.button.lastUrl;
+				element.appendChild(img);
+				
+				this.button.element1.appendChild(element);
+			}
+
+			for(let i = 0; i < this.number; i++) {
+				var element = document.createElement('div');
+				element.classList.add('item');
+				element.classList.add('no_play');
+
+				var img = document.createElement('img');
+				img.src = data.game1.button.firstUrl + getRndInteger(data.game1.button.min, data.game1.button.max) + data.game1.button.lastUrl;
+
+				element.appendChild(img);
+				
+				this.button.element2.appendChild(element);
+			}
+			this.startGame();
+	},
+	startGame: function() {
+		console.log("stage2" + this.lesson)
+		var img1 = this.button.element1.getElementsByTagName("div");
+		for(let i = 0; i < this.gameNumber[this.lesson - 1].element1; i++) {
+			console.log(this.gameNumber[this.lesson - 1].element1)
+			img1[i].classList.remove("no_play");
+		}
+		var img2 = this.button.element2.getElementsByTagName("div");
+		for(let i = 0; i < this.gameNumber[this.lesson - 1].element2; i++) {
+			img2[i].classList.remove("no_play");	
+		}
+		myGameArea.textScore.innerHTML = "Number: " + this.gameNumber[this.lesson - 1].number;
+	},
+	checkResult: function() {
+		var lengthNoPlay = this.getElementsByClassName("no_play").length;
+		if(stage2.number - lengthNoPlay === stage2.gameNumber[stage2.lesson - 1].number) {
+			if(stage2.lesson >= stage2.gameNumber.length) {
+				console.log("win")
+			}
+			else {
+		    myGameArea.textScore.innerHTML = "";
+			stage2.resetElement();
+			stage2.lesson += 1;
+			stage2.startGame();
+			}
+		}
+	},
+	resetElement: function() {
+		var item = document.getElementsByClassName("item");
+		console.log("hello" + item)
+		for(let i = 0; i < item.length; i++) {
+			item[i].classList.add("no_play");
+			console.log(item[i])
+		}
+	}
+}
 
 function resetStage() {
 	var myNode = document.getElementsByClassName("stage")[0];

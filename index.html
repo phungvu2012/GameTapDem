@@ -46,7 +46,7 @@
 			audio.load();
 			myGameArea.createElement();
 		}
-		
+
 		function startGame() {
 			loadingPage.start =  true;
 			audio.click.play();
@@ -65,14 +65,13 @@
 		}
 
 		function backHome() {
+			audio.setAudio();
+			audio.welcome.play();
 			var screenStartGame = document.getElementById("start_game");
 				screenStartGame.style.display = "block";
-				// console.log(interval)
 			for(key in interval) {
 				clearInterval(interval[key]);
-				// console.log(key)
 			}
-			audio.setAudio();
 			resetStage();
 		}
 	</script>
