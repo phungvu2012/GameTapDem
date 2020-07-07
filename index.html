@@ -10,6 +10,7 @@
 	<script type="text/javascript" src="data.js"></script>
 	<script type="text/javascript" src="readFile.js"></script>
 	<script type="text/javascript" src="Sound.js"></script>
+	<script type="text/javascript" src="function.js"></script>
 </head>
 
 <body onload="start()">
@@ -137,31 +138,6 @@
 				}
 			}
 
-		function getRndInteger(min, max) {
-			return Math.floor(Math.random() * (max - min) ) + min;
-		}
-
-
-		function setPaddingElement(element, top, right, bottom, left) {
-			element.style.padding = top + "px " + right + "px " + bottom + "px " + left + "px";
-		}
-
-		function Sound(src) {
-			this.sound = document.createElement("audio");
-			this.sound.src = src;
-			this.sound.setAttribute("preload", "auto");
-			this.sound.setAttribute("controls", "none");
-			this.sound.style.display = "none";
-			document.body.appendChild(this.sound);
-			this.optionAudio = function(loop, volume){
-				this.sound.loop = loop;
-				this.sound.volume = volume;
-				console.log('hello')
-			}
-			this.play = function() {
-				this.sound.play()
-			}
-		}
 		function backgroundSound(volume) {
 			var mySound = new Sound(data.sound.background.firstUrl + 2 + data.sound.background.lastUrl);
 			mySound.optionAudio(true, volume);
