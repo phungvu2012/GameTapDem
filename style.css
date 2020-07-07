@@ -6,7 +6,7 @@
 	height:110vh;
 	background: url("views/image start game/bc75763f4b445842be21e910390e7f16.jpg") no-repeat;
 	z-index: 10;
-	background-size: 100% 100%;
+	background-size: cover;
 }	
 #start_game button {
 	border: none;
@@ -190,9 +190,10 @@ div .container-bg-stuff {
 
 .stage img{
 	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: auto;
 	height: 100%;
 }
 

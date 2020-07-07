@@ -6,3 +6,11 @@ function getRndInteger(min, max) {
 function setPaddingElement(element, top, right, bottom, left) {
 	element.style.padding = top + "px " + right + "px " + bottom + "px " + left + "px";
 }
+
+function resetStage() {
+	var myNode = document.getElementsByClassName("stage")[0];
+	while (myNode.firstChild) {
+	    myNode.removeChild(myNode.firstChild);
+	}
+    myGameArea.textScore.innerHTML = "";
+}

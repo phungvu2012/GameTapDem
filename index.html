@@ -11,9 +11,10 @@
 	<script type="text/javascript" src="readFile.js"></script>
 	<script type="text/javascript" src="Sound.js"></script>
 	<script type="text/javascript" src="function.js"></script>
+	<script type="text/javascript" src="object.js"></script>
 </head>
 
-<body onload="start()">
+<body onload="load()">
 	<div id="start_game">
 		<button onclick="startGame()"><img src="views/image start game/—Pngtree—game button switch start game_5321038 (2).png"></button>
 	</div>
@@ -26,219 +27,53 @@
 	</div>
 
 	<script type="text/javascript">
-		var myGameArea = {
-			gameArea: document.createElement('div'),
-			stage: document.createElement('div'),
-			homeButton: document.createElement('div'),
-			videoButton: document.createElement('div'),
-			instructor: document.createElement('div'),
-			start: function() {
-				this.gameArea.classList.add('game-area');
-
-				this.gameArea.appendChild(this.stage);
-
-				this.homeButton.classList.add('home-button');
-				var homeImg = document.createElement("img");
-				homeImg.src = data.home.url;
-				this.homeButton.appendChild(homeImg);
-
-				this.videoButton.classList.add('video-button');
-				var videoImg = document.createElement("img");
-				videoImg.src = data.video.url;
-				this.videoButton.appendChild(videoImg);
-
-				this.instructor.classList.add('instructor');
-				this.instructor.classList.add("instructor");
-
-				var bear = document.createElement("div");
-				bear.classList.add("bear");
-				bear.classList.add("action-bear");
-				this.instructor.appendChild(bear);
-
-				var cornerImg = document.createElement("img");
-				cornerImg.classList.add("corner");
-				cornerImg.src = data.flatform.url;
-				this.instructor.appendChild(cornerImg);
-
-
-				// this.gameArea.classList.add('game-area');
-				var gameBox = document.getElementsByClassName("game-box")[0];
-				this.gameArea.appendChild(this.homeButton);
-				this.gameArea.appendChild(this.videoButton);
-				this.gameArea.appendChild(this.instructor);
-				gameBox.appendChild(this.gameArea);
-			}
+		var loadingPage = {
+			start: false,
+			loaded: false
 		}
+		window.addEventListener("load", function(event) {
+		    console.log("Tất cả các tài nguyên đã được tải nạp hoàn tất!");
+		    loadingPage.loaded = true;
+		    if(loadingPage.start) {
+		    	start();
+		    	console.log("start")
+				var screenStartGame = document.getElementById("start_game");
+				screenStartGame.style.display = "none";
+		    };
+		});
 
-		var stage1 = {
-				number: 20,
-				count: 0,
-				textScore: document.createElement("span"),
-				item: [],
-				clickSound: "",
-				start: function (gameArea) {
-					gameArea.stage.classList.add('stage');
-					var stageImg = document.createElement("img");
-					stageImg.src = data.game1.box.url;
-					gameArea.stage.appendChild(stageImg);
-					setPaddingElement(gameArea.stage, data.game1.box.paddingTop * gameArea.stage.clientHeight, data.game1.box.paddingRight * gameArea.stage.clientWidth, data.game1.box.paddingBottom * gameArea.stage.clientHeight, data.game1.box.paddingLeft * gameArea.stage.clientWidth);
-					// Tao các phần tử 
-					this.createItem(gameArea, this.number);
-					this.clickSound =  new Sound(data.sound.clickGame.url);
-					// Tạo audio đọc số
-					this.loadAudioNumber();
-					gameArea.gameArea.appendChild(this.textScore);
-					this.textScore.classList.add("score");	
-					this.textScore.innerHTML = "";
-				},
-				createItem: function(gameArea, number) {
-					for(let i = 0; i < number; i++) {
-						this.item[i] = document.createElement('div');
-						this.item[i].classList.add('item');
-						this.item[i].classList.add('under_start');
-						// this.item[i].classList.add('no_play');
-						this.item[i].addEventListener("click", this.countItem, false);
-
-						var img = document.createElement('img');
-						img.src = data.game1.button.firstUrl + getRndInteger(data.game1.button.min, data.game1.button.max) + data.game1.button.lastUrl;
-						this.item[i].appendChild(img);
-						gameArea.stage.appendChild(this.item[i]);
-					}
-				},
-				loadAudioNumber: function() {
-					this.audio = [];
-					for (let i = 0; i < this.number; i++) {
-						this.audio[i] = new Sound(data.sound.number.firstUrl + (i+1) + data.sound.number.lastUrl)
-					}
-				},
-				countItem: function(e) {
-					stage1.clickSound.play();
-					if(this.classList.toString().indexOf("under_start") > -1) {
-						++stage1.count;
-						console.log(stage1.count);
-						this.classList.remove('under_start');
-						stage1.audio[stage1.count-1].play();
-						stage1.textScore.innerHTML = "Number: " + stage1.count;
-					}
-					else {
-						--stage1.count;
-						this.classList.add('under_start');
-						stage1.textScore.innerHTML = "Number: " + stage1.count;
-					}
-				},
-				introGame1: function() {
-					var i = 1;
-					var intro = setInterval(function() {
-							// stage1.item[i-1].classList.remove('no_play');
-							// stage1.audio[i-1].play();
-							++i;
-							if(i > this.number) clearInterval(intro);
-						}, 1500);
-
-				}
-			}
-
-		function backgroundSound(volume) {
-			var mySound = new Sound(data.sound.background.firstUrl + 2 + data.sound.background.lastUrl);
-			mySound.optionAudio(true, volume);
-			mySound.autoplay = true
-			mySound.sound.classList.add("sound");
-			document.body.addEventListener("click", function() {
-				mySound.play();
-			}, false)	
-
+		function load() {
+			audio.load();
+			myGameArea.createElement();
 		}
-
-		var audio = {
-			click: "",
-			load: function() {
-				this.click = new Sound(data.sound.click.url);
-			}
-		}
-
+		
 		function startGame() {
-			var screenStartGame = document.getElementById("start_game");
-			screenStartGame.style.display = "none";
+			loadingPage.start =  true;
 			audio.click.play();
+			if(loadingPage.loaded) {
+				start();
+				var screenStartGame = document.getElementById("start_game");
+				screenStartGame.style.display = "none";
+				audio.backgroundSound(0.4);
+				audio.background.play();
+			}
 		}
 
 		function start() {
-			audio.load();
-			backgroundSound(0.4);	
-			myGameArea.start();
-			stage1.start(myGameArea);
+			stage1.load(myGameArea);
 			stage1.introGame1();
 		}
-	</script>
 
-	<script>
-		var data = {
-			backgroundImage: {
-				url: "views/background-color/color (10).png",
-			},
-			screen: {
-				width: window.innerWidth,
-				height: document.documentElement.clientHeight
-			},
-			kodiImage: {
-				url: "views/kodi/kodi (1).png",
-			},
-			flatform: {
-				url: "views/kodi/platform.png",
-			},
-			video: {
-				url: "views/video/icon (1).png",
-			},
-			home: {
-				url: "views/home/home.png",
-			},
-			game1: {
-				box: {
-					url: "views/box/box (2).png",
-					width: 2048,
-					height: 1536,
-					paddingTop: 0.091,
-					paddingLeft: 0.0635,
-					paddingBottom: 0.174,
-					paddingRight: 0.07
-				},
-				button: {
-					firstUrl: "views/reyabug/icon (",
-					lastUrl: ").png",
-					min: 1,
-					max: 100
-				}
-			},
-			screenGame: {},
-			ratio: 1,
-			zoom: 1,
-			stage: {
-				zoom: 0.8
-			},
-			sound: {
-				background: {
-					firstUrl: "views/sound/music (",
-					lastUrl: ").mp3"
-				},
-				number: {
-					firstUrl: "views/sound number/",
-					lastUrl: ".mp3"
-				},
-				click: {
-					url: "views/sound/Mouse-Click-00-c-FesliyanStudios.com.mp3"
-				},
-				clickGame: {
-					url: "views/reyabug/numberline_wing_flap.mp3"
-				}
-			},
-			setScreenGame: function() {
-				this.ratio = this.backgroundImage.width / this.backgroundImage.height;
-				this.zoom = this.screen.height / this.backgroundImage.height
-				this.screenGame.height = this.screen.height;
-				this.screenGame.width = this.screenGame.height * this.ratio;
-				this.stage.height = this.screenGame.height * this.stage.zoom;
-				this.stage.width = this.screenGame.width * this.stage.zoom;
+		function backHome() {
+			var screenStartGame = document.getElementById("start_game");
+				screenStartGame.style.display = "block";
+				// console.log(interval)
+			for(key in interval) {
+				clearInterval(interval[key]);
+				// console.log(key)
 			}
+			audio.setAudio();
+			resetStage();
 		}
 	</script>
 </body>

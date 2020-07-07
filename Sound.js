@@ -8,7 +8,6 @@ function Sound(src) {
 	this.optionAudio = function(loop, volume){
 		this.sound.loop = loop;
 		this.sound.volume = volume;
-		console.log('hello')
 	}
 	this.play = function() {
 		this.sound.play()
