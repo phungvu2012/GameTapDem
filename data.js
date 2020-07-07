@@ -19,6 +19,7 @@
 				url: "views/home/home.png",
 			},
 			game1: {
+				number: [16, 10, 8],
 				box: {
 					url: "views/box/box (2).png",
 					width: 2048,
@@ -33,6 +34,45 @@
 					lastUrl: ").png",
 					min: 1,
 					max: 100
+				}
+			},
+			game2:{
+				gameNumber: [
+					{
+						number: 16,
+						element1: 16,
+						element2: 12
+					}, 
+					{
+						number: 12,
+						element1: 14,
+						element2: 12
+					}, 
+					{
+						number: 8,
+						element1: 8,
+						element2: 18
+					}],
+				box: {
+					url: "views/game2/gia.png",
+					width: 2048,
+					height: 1536,
+					paddingTop: 0.08,
+					paddingLeft: 0,
+					paddingBottom: 0.35,
+					paddingRight: 0.07
+				},
+				elephant: {
+					firstUrl: "views/game2/elephant (",
+					lastUrl: ").png",
+					min: 1,
+					max: 4
+				},
+				numberImage: {
+					firstUrl: "views/number/",
+					lastUrl: ".png",
+					min: 1,
+					max: 20
 				}
 			},
 			screenGame: {},
@@ -63,10 +103,16 @@
 					url: "views/sound/back_button.mp3"
 				},
 				happy: {
-					url: ""
+					firstUrl: "views/kodi/happy (",
+					lastUrl: ").mp3",
+					min: 1,
+					max: 5
 				},
 				wrong: {
-					url: ""
+					firstUrl: "views/kodi/wrong (",
+					lastUrl: ").mp3",
+					min: 1,
+					max: 3
 				},
 				thank: {
 					url: "views/kodi/usgk$kodivoice$thanksforplayingwithme.mp3"

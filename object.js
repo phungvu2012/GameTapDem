@@ -10,6 +10,8 @@ var myGameArea = {
 		this.gameArea.classList.add('game-area');
 
 		this.gameArea.appendChild(this.stage);
+		this.stage.setAttribute("class", "screenGame");
+
 
 		this.homeButton.classList.add('home-button');
 		this.homeButton.addEventListener("click", backHome);
@@ -56,6 +58,8 @@ var audio = {
 	bubblePop: "",
 	welcome: "",
 	thank: "",
+	happy: [],
+	wrong: [],
 	load: function(number) {
 		this.click = new Sound(data.sound.click.url);
 		this.clickSound =  new Sound(data.sound.clickGame.url);
@@ -63,6 +67,13 @@ var audio = {
 		this.bubblePop = new Sound(data.sound.bubblePop.url);
 		this.welcome = new Sound(data.sound.welcome.url);
 		this.thank = new Sound(data.sound.thank.url);
+
+		for(let i = data.sound.happy.min; i <= data.sound.happy.max; ++i) {
+			this.happy[i] = new Sound(data.sound.happy.firstUrl + i + data.sound.happy.lastUrl)
+		}
+		for(let i = data.sound.wrong.min; i <= data.sound.wrong.max; ++i) {
+			this.wrong[i] = new Sound(data.sound.wrong.firstUrl + i + data.sound.wrong.lastUrl)
+		}
 	},
 	loadAudioNumber: function(number) {
 		for (let i = 0; i < number; i++) {
@@ -87,7 +98,7 @@ var audio = {
 
 var stage1 = {
 		number: 20,
-		gameNumber: [1, 2, 3],
+		gameNumber: data.game1.number,
 		count: 0,
 		item: [],
 		complete: false,
@@ -145,7 +156,7 @@ var stage1 = {
 						clearInterval(interval.introGame1);
 						setTimeout(stage1.start, 1000);
 					}
-				}, 200); //1000
+				}, 1000); //1000
 			interval.loopGame1 = setInterval(this.update, 200);
 		},
 		start: function() {
@@ -184,29 +195,17 @@ var stage1 = {
 
 var stage2 = {
 	number: 20,
-	gameNumber: [
-		{
-			number: 16,
-			element1: 16,
-			element2: 12
-		}, 
-		{
-			number: 12,
-			element1: 14,
-			element2: 12
-		}, 
-		{
-			number: 8,
-			element1: 8,
-			element2: 18
-		}],
+	gameNumber: data.game2.gameNumber,
 	lesson: 1,
 	button: {
-		element1: document.createElement("button"),
-		element2: document.createElement("button")
+		element1: "",
+		element2: ""
 	},
 	load: function() {
 		this.lesson = 1;
+		this.button.element1 = document.createElement("button");
+		this.button.element2 = document.createElement("button");
+
 		myGameArea.stage.appendChild(this.button.element1);
 		myGameArea.stage.appendChild(this.button.element2);
 		myGameArea.stage.classList.add('stage2');
@@ -219,6 +218,7 @@ var stage2 = {
 
 	},
 	createItem: function() {
+		console.log('create')
 			for(let i = 0; i < this.number; i++) {
 				var element = document.createElement('div');
 				element.classList.add('item');
@@ -249,7 +249,7 @@ var stage2 = {
 		console.log("stage2" + this.lesson)
 		var img1 = this.button.element1.getElementsByTagName("div");
 		for(let i = 0; i < this.gameNumber[this.lesson - 1].element1; i++) {
-			console.log(this.gameNumber[this.lesson - 1].element1)
+			// console.log(this.gameNumber[this.lesson - 1].element1)
 			img1[i].classList.remove("no_play");
 		}
 		var img2 = this.button.element2.getElementsByTagName("div");
@@ -261,8 +261,12 @@ var stage2 = {
 	checkResult: function() {
 		var lengthNoPlay = this.getElementsByClassName("no_play").length;
 		if(stage2.number - lengthNoPlay === stage2.gameNumber[stage2.lesson - 1].number) {
+			var rand = getRndInteger(data.sound.happy.min, data.sound.happy.max);
+			audio.happy[rand].play();
 			if(stage2.lesson >= stage2.gameNumber.length) {
-				console.log("win")
+				resetStage();
+				stage3.load();
+				// myGameArea.setAttribute("class", "")
 			}
 			else {
 		    myGameArea.textScore.innerHTML = "";
@@ -271,19 +275,102 @@ var stage2 = {
 			stage2.startGame();
 			}
 		}
+		else {
+			var rand = getRndInteger(data.sound.wrong.min, data.sound.wrong.max);
+			audio.wrong[rand].play();
+		}
 	},
 	resetElement: function() {
 		var item = document.getElementsByClassName("item");
 		console.log("hello" + item)
 		for(let i = 0; i < item.length; i++) {
 			item[i].classList.add("no_play");
-			console.log(item[i])
 		}
 	}
 }
 
+var stage3 = {
+	number: 20,
+	item: [],
+	numberLesson: 1,
+	complete: false,
+	load: function (gameArea) {
+		myGameArea.stage.classList.add('stage3');
+
+		var stageImg = document.createElement("img");
+		stageImg.src = data.game2.box.url;
+		myGameArea.stage.appendChild(stageImg);
+		setPaddingElement(myGameArea.stage, data.game2.box.paddingTop * myGameArea.stage.clientHeight, data.game2.box.paddingRight * myGameArea.stage.clientWidth, data.game2.box.paddingBottom * myGameArea.stage.clientHeight, data.game2.box.paddingLeft * myGameArea.stage.clientWidth);
+		// Tao các phần tử 
+		this.createItem(myGameArea, this.number);
+		// Tạo audio đọc số
+	},
+	createItem: function(gameArea, number) {
+		this.lesson = 1;
+		for(let i = 0; i < number; i++) {
+			this.item[i] = document.createElement('div');
+			this.item[i].classList.add('item');
+
+			// this.item[i].classList.add('no_play');
+
+			var img = document.createElement('img');
+			var rand = getRndInteger(data.game2.numberImage.min, data.game2.numberImage.max);
+			img.src = data.game2.numberImage.firstUrl + rand + data.game2.numberImage.lastUrl;
+			this.item[i].appendChild(img);
+			this.item[i].setAttribute("id", "id" + i + '-' + rand)
+
+			this.item[i].addEventListener('click', this.check, false)
+
+
+			gameArea.stage.appendChild(this.item[i]);
+
+			this.createElephant();
+			console.log('Winner')
+		}
+		this.chooseRandNumber();
+	},
+	createElephant: function() {
+		var img = document.createElement('img');
+		img.src = data.game2.elephant.firstUrl + 1 + data.game2.elephant.lastUrl;
+		img.classList.add('elephant');
+
+		myGameArea.stage.appendChild(img);
+	},
+	chooseRandNumber: function() {
+		var rand = getRndInteger(0, data.game2.numberImage.max - data.game2.numberImage.min);
+		console.log(rand);
+		var index = this.item[rand].id.toString().indexOf('-');
+		this.numberLesson = this.item[rand].id.toString().slice(index + 1);
+		myGameArea.textScore.innerHTML = "" + this.numberLesson;
+	},
+	check: function() {
+		var numberItem = this.id.toString().slice( this.id.toString().indexOf('-') + 1);
+		if(numberItem == stage3.numberLesson) {
+			var rand = getRndInteger(data.sound.happy.min, data.sound.happy.max);
+			audio.happy[rand].play();
+			this.classList.add("finished");
+			stage3.complete = true;
+			for(element of stage3.item) {
+				var numberEle = element.id.toString().slice( element.id.toString().indexOf('-') + 1);
+				if(numberEle == stage3.numberLesson) {
+					if(element.classList.toString().indexOf("finished") === - 1) 
+					stage3.complete = false;
+				}
+			}
+		}
+		else {
+			var rand = getRndInteger(data.sound.wrong.min, data.sound.wrong.max);
+			audio.wrong[rand].play();
+		}
+
+			
+		if(stage3.complete) backHome();
+	}
+}
+
 function resetStage() {
-	var myNode = document.getElementsByClassName("stage")[0];
+	myGameArea.stage.setAttribute("class", "screenGame");
+	var myNode = document.getElementsByClassName("screenGame")[0];
 	while (myNode.firstChild) {
 	    myNode.removeChild(myNode.firstChild);
 	}
